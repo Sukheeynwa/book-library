@@ -43,6 +43,15 @@ function renderBook(book) {
 	pagesContainer.classList.add("pages-container");
 	pagesContainer.textContent = `${book.pages} pages`;
 
+	let deleteBtn = document.createElement("button");
+	deleteBtn.classList.add("delete-btn");
+	deleteBtn.textContent = "x";
+
+	deleteBtn.addEventListener("click", () => {
+		mainContainer.removeChild(boxContainer);
+		delete myLibrary[myLibrary.indexOf(book)];
+	});
+
 	let isReadContainer = document.createElement("button");
 	isReadContainer.classList.add("is-read-container");
 
@@ -69,6 +78,7 @@ function renderBook(book) {
 	boxContainer.appendChild(authorContainer);
 	boxContainer.appendChild(pagesContainer);
 	boxContainer.appendChild(isReadContainer);
+	boxContainer.appendChild(deleteBtn);
 	mainContainer.appendChild(boxContainer);
 };
 
