@@ -26,6 +26,7 @@ let pagesInput = document.querySelector("#pages");
 let isReadInput = document.querySelector("#is-read");
 let addBtn = document.querySelector("#addBtn");
 
+
 function renderBook(book) {
 	let boxContainer = document.createElement("div");
 	boxContainer.classList.add("box-container");
@@ -36,15 +37,33 @@ function renderBook(book) {
 
 	let authorContainer = document.createElement("p");
 	authorContainer.classList.add("author-container");
-	authorContainer.textContent = book.author;
+	authorContainer.textContent = `by ${book.author}`;
 
 	let pagesContainer = document.createElement("p");
 	pagesContainer.classList.add("pages-container");
-	pagesContainer.textContent = book.pages;
+	pagesContainer.textContent = `${book.pages} pages`;
 
 	let isReadContainer = document.createElement("button");
 	isReadContainer.classList.add("is-read-container");
-	isReadContainer.textContent = book.isRead ? "Read" : "Not Read";
+
+	if (book.isRead) {
+		isReadContainer.textContent = "Read";
+		isReadContainer.setAttribute("class", "read");
+	} else {
+		isReadContainer.textContent = "Not Read";
+		isReadContainer.setAttribute("class", "not-read");
+	};
+
+	isReadContainer.addEventListener("click", () => {
+		book.isRead = !book.isRead;
+		if (book.isRead) {
+				isReadContainer.textContent = "Read";
+				isReadContainer.setAttribute("class", "read");
+		} else {
+				isReadContainer.textContent = "Not Read";
+				isReadContainer.setAttribute("class", "not-read");
+		}
+	});
 
 	boxContainer.appendChild(titleContainer);
 	boxContainer.appendChild(authorContainer);
@@ -55,6 +74,7 @@ function renderBook(book) {
 
 function renderBooks() {
 	mainContainer.innerHTML = "";
+
 	myLibrary.forEach((book) => {
 		renderBook(book);
 	});
@@ -63,8 +83,11 @@ function renderBooks() {
 addBtn.addEventListener("click", () => {
 	let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value, isReadInput.checked);
 
+	// Skip this function if input is not valid
 	addBookToLibrary(newBook);
+
 	renderBooks();
 });
 
 renderBooks();
+
