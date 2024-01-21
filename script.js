@@ -26,59 +26,45 @@ let pagesInput = document.querySelector("#pages");
 let isReadInput = document.querySelector("#is-read");
 let addBtn = document.querySelector("#addBtn");
 
-for (let i = 0; i < myLibrary.length; i ++) {
+function renderBook(book) {
 	let boxContainer = document.createElement("div");
-	mainContainer.appendChild(boxContainer);
-	boxContainer.classList.add("box-container")
+	boxContainer.classList.add("box-container");
 
 	let titleContainer = document.createElement("h1");
-	boxContainer.appendChild(titleContainer);
-	titleContainer.classList.add("title-container")
+	titleContainer.classList.add("title-container");
+	titleContainer.textContent = book.title;
 
 	let authorContainer = document.createElement("p");
-	boxContainer.appendChild(authorContainer);
-	authorContainer.classList.add("author-container")
+	authorContainer.classList.add("author-container");
+	authorContainer.textContent = book.author;
 
 	let pagesContainer = document.createElement("p");
+	pagesContainer.classList.add("pages-container");
+	pagesContainer.textContent = book.pages;
+
+	let isReadContainer = document.createElement("button");
+	isReadContainer.classList.add("is-read-container");
+	isReadContainer.textContent = book.isRead ? "Read" : "Not Read";
+
+	boxContainer.appendChild(titleContainer);
+	boxContainer.appendChild(authorContainer);
 	boxContainer.appendChild(pagesContainer);
-	pagesContainer.classList.add("pages-container")
-
-	let isReadContainer = document.createElement("p");
 	boxContainer.appendChild(isReadContainer);
-	isReadContainer.classList.add("is-read-container")
+	mainContainer.appendChild(boxContainer);
+};
 
-	titleContainer.append(myLibrary[i].title); 
-	authorContainer.append(myLibrary[i].author);
-	pagesContainer.append(myLibrary[i].pages);
-	isReadContainer.append(myLibrary[i].isRead);
-}
-
+function renderBooks() {
+	mainContainer.innerHTML = "";
+	myLibrary.forEach((book) => {
+		renderBook(book);
+	});
+};
+	
 addBtn.addEventListener("click", () => {
-	let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value, isReadInput.value);
+	let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value, isReadInput.checked);
+
 	addBookToLibrary(newBook);
-
-	let boxContainer = document.createElement("div");
-	mainContainer.appendChild(boxContainer);
-	boxContainer.classList.add("box-container")
-
-	let titleContainer = document.createElement("h1");
-	boxContainer.appendChild(titleContainer);
-	titleContainer.classList.add("title-container")
-
-	let authorContainer = document.createElement("p");
-	boxContainer.appendChild(authorContainer);
-	authorContainer.classList.add("author-container")
-
-	let pagesContainer = document.createElement("p");
-	boxContainer.appendChild(pagesContainer);
-	pagesContainer.classList.add("pages-container")
-
-	let isReadContainer = document.createElement("p");
-	boxContainer.appendChild(isReadContainer);
-	isReadContainer.classList.add("is-read-container")
-
-	titleContainer.append(titleInput.value); 
-	authorContainer.append(authorInput.value);
-	pagesContainer.append(pagesInput.value);
-	isReadContainer.append(isReadInput.value);
+	renderBooks();
 });
+
+renderBooks();
