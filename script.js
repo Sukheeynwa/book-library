@@ -93,11 +93,33 @@ function renderBooks() {
 addBtn.addEventListener("click", () => {
 	let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value, isReadInput.checked);
 
-	// Skip this function if input is not valid
-	addBookToLibrary(newBook);
-
-	renderBooks();
+	if(titleInput.value === "" || authorInput.value === "" || pagesInput.value === "") {
+		return;
+	} else {
+		addBookToLibrary(newBook);
+		renderBooks();
+	}
 });
 
 renderBooks();
 
+document.querySelector("form").addEventListener("submit", function(event) {
+    event.preventDefault();
+		dialog.close();
+});
+
+let dialog = document.querySelector("dialog");
+let addBook = document.querySelector("#add-book");
+let closeBtn = document.querySelector("#closeBtn");
+
+addBook.addEventListener("click", () => {
+	titleInput.value = "";
+	authorInput.value = "";
+	pagesInput.value = "";
+	isReadInput.checked = false;
+	dialog.showModal();
+});
+
+closeBtn.addEventListener("click", () => {
+	dialog.close();
+});
