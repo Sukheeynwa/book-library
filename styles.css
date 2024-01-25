@@ -94,15 +94,15 @@ body {
 }
 
 #add-book {
-	height: 60px;
-	width: 60px;
-	font-size: 40px;
+	height: 40px;
+	width: 160px;
+	font-size: 20px;
 	font-weight: 600;
-	color: green;
+	color: white;
 	border-radius: 40px;
 	border: none;
-	background-color: white;
-	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+	background-color: teal;
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
@@ -176,4 +176,18 @@ input[type="checkbox"] {
 	border-radius: 15px;
 	font-weight: 700;
 	font-size: 20px;
+}
+
+header {
+	background-color: white;
+	height: 80px;
+	display: flex;
+	align-items: center;
+	position: relative;
+	justify-content: space-between;
+	padding: 0px 50px;
+}
+
+header h1 {
+	font-size: 24px;
 }

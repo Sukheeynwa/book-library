@@ -93,11 +93,11 @@ function renderBooks() {
 addBtn.addEventListener("click", () => {
 	let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value, isReadInput.checked);
 
-	if(titleInput.value === "" || authorInput.value === "" || pagesInput.value === "") {
-		return;
-	} else {
+	if(titleInput.value !== "" || authorInput.value !== "" || pagesInput.value !== "") {
 		addBookToLibrary(newBook);
 		renderBooks();
+	} else {
+		return;
 	}
 });
 
