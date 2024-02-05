@@ -21,7 +21,7 @@ body {
 	width: 180px;
 }
 
-.box-container {
+.book-container {
 	background-color: white;
 	border-radius: 20px;
 	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
@@ -36,7 +36,7 @@ body {
 	position: relative;
 }
 
-.box-container:hover {
+.book-container:hover {
 	scale: 105%;
 	transition: 0.1s;
 }

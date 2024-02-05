@@ -1,125 +1,138 @@
-const myLibrary = [];
+class Book {
+	constructor(title, author, pages, isRead) {
+		this.title = title;
+		this.author = author;
+		this.pages = pages;
+		this.isRead = isRead;
+	};
+};
 
-function Book(title, author, pages, isRead) {
-	this.title = title;
-	this.author = author;
-	this.pages = pages;
-	this.isRead = isRead;
-}
+document.querySelector("form").addEventListener("submit", (e) => {
+	e.preventDefault();
+});
 
-function addBookToLibrary(book) {
-	myLibrary.push(book);
-}
+//pre rendered books;
 
 let book1 = new Book("1984", "George Orwell", 328, true);
 let book2 = new Book("Pride and Prejudice", "Jane Austen", 279, false);
 let book3 = new Book("To Kill a Mockingbird", "Harper Lee", 281, true);
 
-addBookToLibrary(book1);
-addBookToLibrary(book2);
-addBookToLibrary(book3);
-
-let mainContainer = document.querySelector("#main");
-let titleInput = document.querySelector("#title");
-let authorInput = document.querySelector("#author");
-let pagesInput = document.querySelector("#pages");
-let isReadInput = document.querySelector("#is-read");
-let addBtn = document.querySelector("#addBtn");
-
-
-function renderBook(book) {
-	let boxContainer = document.createElement("div");
-	boxContainer.classList.add("box-container");
-
-	let titleContainer = document.createElement("h1");
-	titleContainer.classList.add("title-container");
-	titleContainer.textContent = book.title;
-
-	let authorContainer = document.createElement("p");
-	authorContainer.classList.add("author-container");
-	authorContainer.textContent = `by ${book.author}`;
-
-	let pagesContainer = document.createElement("p");
-	pagesContainer.classList.add("pages-container");
-	pagesContainer.textContent = `${book.pages} pages`;
-
-	let deleteBtn = document.createElement("button");
-	deleteBtn.classList.add("delete-btn");
-	deleteBtn.textContent = "x";
-
-	deleteBtn.addEventListener("click", () => {
-		mainContainer.removeChild(boxContainer);
-		delete myLibrary[myLibrary.indexOf(book)];
+const addBookModule = (function(){
+	const dialog = document.querySelector("dialog");
+	const addBook = document.querySelector("#add-book");
+	
+	addBook.addEventListener("click", () => {
+		dialogModule.titleInput.value = "";
+		dialogModule.authorInput.value = "";
+		dialogModule.pagesInput.value = "";
+		dialogModule.isRead = false; 
+		dialog.showModal();
 	});
+	
+	return {
+		dialog,
+	};
+})();
 
-	let isReadContainer = document.createElement("button");
-	isReadContainer.classList.add("is-read-container");
+const dialogModule = (function() {
+	const titleInput = document.querySelector("#title");
+	const authorInput = document.querySelector("#author");
+	const pagesInput = document.querySelector("#pages");
+	const isReadInput = document.querySelector("#is-read");
 
-	if (book.isRead) {
-		isReadContainer.textContent = "Read";
-		isReadContainer.setAttribute("class", "read");
-	} else {
-		isReadContainer.textContent = "Not Read";
-		isReadContainer.setAttribute("class", "not-read");
+	const addBtn = document.querySelector("#addBtn");
+	const closeBtn = document.querySelector("#closeBtn");
+
+	const createBook = function() {
+		let newBook = new Book(titleInput.value, authorInput.value,pagesInput.value, isReadInput.checked);
+
+		return newBook;
 	};
 
-	isReadContainer.addEventListener("click", () => {
-		book.isRead = !book.isRead;
-		if (book.isRead) {
-				isReadContainer.textContent = "Read";
-				isReadContainer.setAttribute("class", "read");
-		} else {
-				isReadContainer.textContent = "Not Read";
-				isReadContainer.setAttribute("class", "not-read");
-		}
+	const addBookToLibrary = function(book) {
+		renderModule.library.push(book);
+	};
+
+	addBtn.addEventListener("click", () => {
+		addBookToLibrary(createBook());
+		renderModule.renderBooks();
+		addBookModule.dialog.close();
 	});
 
-	boxContainer.appendChild(titleContainer);
-	boxContainer.appendChild(authorContainer);
-	boxContainer.appendChild(pagesContainer);
-	boxContainer.appendChild(isReadContainer);
-	boxContainer.appendChild(deleteBtn);
-	mainContainer.appendChild(boxContainer);
-};
-
-function renderBooks() {
-	mainContainer.innerHTML = "";
-
-	myLibrary.forEach((book) => {
-		renderBook(book);
+	closeBtn.addEventListener("click", () => {
+		addBookModule.dialog.close();
 	});
-};
+
+	return {
+		 addBookToLibrary, titleInput, authorInput, pagesInput, isReadInput,
+	};
+})();
+
+const renderModule = (function() {
+	const library = [];
 	
-addBtn.addEventListener("click", () => {
-	let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value, isReadInput.checked);
+	const mainContainer = document.querySelector("#main");
 
-	if(titleInput.value !== "" || authorInput.value !== "" || pagesInput.value !== "") {
-		addBookToLibrary(newBook);
-		renderBooks();
-	} else {
-		return;
+	const renderBook = function() {
+		library.forEach((book) => {
+			const bookContainer = document.createElement("div");
+			const titleContainer = document.createElement("h1");
+			const authorContainer = document.createElement("p");
+			const pagesContainer = document.createElement("p");
+			const isReadContainer = document.createElement("button");
+			const deleteBtn = document.createElement("button");
+			
+			bookContainer.classList.add("book-container");
+			titleContainer.classList.add("title-container");
+			deleteBtn.classList.add("delete-btn");
+			deleteBtn.textContent = "x";
+
+			titleContainer.textContent = book.title;
+			authorContainer.textContent = "by " + book.author;
+			pagesContainer.textContent = book.pages + " pages";
+
+			isReadContainer.addEventListener("click", () => {
+				book.isRead = !book.isRead;
+				renderBooks();
+			});
+
+			if(book.isRead === true) {
+				isReadContainer.textContent = "Read";
+				isReadContainer.classList.add("read");
+			} else {
+				isReadContainer.textContent = "Not Read";
+				isReadContainer.classList.add("not-read");
+			};
+
+			bookContainer.appendChild(titleContainer);
+			bookContainer.appendChild(authorContainer);
+			bookContainer.appendChild(pagesContainer);
+			bookContainer.appendChild(isReadContainer);
+
+			bookContainer.appendChild(deleteBtn);
+
+			deleteBtn.addEventListener("click", () => {
+				delete library[library.indexOf(book)];
+				renderBooks();
+			});
+
+			mainContainer.appendChild(bookContainer);
+		});
+	};
+
+	const renderBooks = function() {
+		mainContainer.innerHTML = "";
+		renderBook();
 	}
-});
 
-renderBooks();
+	return {
+		library, renderBooks,
+	};
 
-document.querySelector("form").addEventListener("submit", function(event) {
-    event.preventDefault();
-		dialog.close();
-});
+})();
 
-let dialog = document.querySelector("dialog");
-let addBook = document.querySelector("#add-book");
-let closeBtn = document.querySelector("#closeBtn");
+dialogModule.addBookToLibrary(book1);
+dialogModule.addBookToLibrary(book2);
+dialogModule.addBookToLibrary(book3);
 
-addBook.addEventListener("click", () => {
-	titleInput.value = "";
-	authorInput.value = "";
-	pagesInput.value = "";
-	isReadInput.checked = false;
-	dialog.showModal();
-});
-
-closeBtn.addEventListener("click", () => {
-	dialog.close();
-});
+renderModule.renderBooks();
